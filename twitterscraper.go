@@ -2,7 +2,6 @@ package twitterscraper
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	urlutil "net/url"
 	"strings"
@@ -19,8 +18,6 @@ func GetTweets(handle string, pages uint8) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Println("Hello world", handle, pages)
 
 	req.Header = map[string][]string{
 		"Accept":                []string{"application/json", "text/javascript", "*/*; q=0.01"},
