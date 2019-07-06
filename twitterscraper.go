@@ -38,8 +38,7 @@ func GetTweets(handle string, pages uint8) ([]string, error) {
 		return nil, err
 	}
 
-	var tweets []string
-
+	tweetsMap := make(map[string]string) //map of tweet IDs to text
 	for i := uint8(0); i < pages; i++ {
 		var returnval struct {
 			Items string `json:"items_html"`
@@ -54,11 +53,12 @@ func GetTweets(handle string, pages uint8) ([]string, error) {
 			return nil, err
 		}
 
-		tweetsHTML := doc.Find(".tweet-text")
-		curPageTweets := tweetsHTML.Map(func(index int, tweetHTML *goquery.Selection) string {
-			return tweetHTML.Text()
+		tweetsHTML := doc.Find(".stream-item")
+		tweetsHTML.Each(func(index int, tweetHTML *goquery.Selection) {
+			id, _ := tweetHTML.Attr("data-item-id")
+			tweet := tweetHTML.Find(".tweet-text").Text()
+			tweetsMap[id] = tweet
 		})
-		tweets = append(tweets, curPageTweets...)
 
 		finalIDonPage, exists := doc.Find(".stream-item").Last().Attr("data-item-id")
 		if !exists {
@@ -73,6 +73,13 @@ func GetTweets(handle string, pages uint8) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	tweets := make([]string, len(tweetsMap))
+	i := 0
+	for _, tweet := range tweetsMap {
+		tweets[i] = tweet
+		i++
 	}
 
 	return tweets, nil
