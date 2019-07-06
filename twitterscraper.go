@@ -60,12 +60,13 @@ func GetTweets(handle string, pages uint8) ([]string, error) {
 			tweetsMap[id] = tweet
 		})
 
-		finalIDonPage, exists := doc.Find(".stream-item").Last().Attr("data-item-id")
+		finalIDonPage, exists := tweetsHTML.Last().Attr("data-item-id")
 		if !exists {
 			return nil, errors.New("Page fetched formatted incorrectly")
 		}
 
 		form, _ := urlutil.ParseQuery(req.URL.RawQuery)
+		form.Del("max_position") // if it already exists
 		form.Add("max_position", finalIDonPage)
 		req.URL.RawQuery = form.Encode()
 
