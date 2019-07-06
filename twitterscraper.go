@@ -7,8 +7,6 @@ import (
 	urlutil "net/url"
 	"strings"
 
-	"errors"
-
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -62,7 +60,7 @@ func GetTweets(handle string, pages uint8) ([]string, error) {
 
 		finalIDonPage, exists := tweetsHTML.Last().Attr("data-item-id")
 		if !exists {
-			return nil, errors.New("Page fetched formatted incorrectly")
+			break // no more tweets left
 		}
 
 		form, _ := urlutil.ParseQuery(req.URL.RawQuery)

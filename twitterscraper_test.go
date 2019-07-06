@@ -10,7 +10,7 @@ import (
 
 func TestGetTweets(t *testing.T) {
 	fmt.Println("Hello world")
-	tweets, err := twitterscraper.GetTweets("realDonaldTrump", 25)
+	tweets, err := twitterscraper.GetTweets("angmingliang", 50)
 	if err != nil {
 		t.Fatal(err)
 	}
